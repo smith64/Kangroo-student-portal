@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Payment - Kangaroo University</title>
+  <link rel="stylesheet" href="payment.css">
+</head>
+<body lang="en" style="background-image: url('../../Images/download.jpg'); background-size: cover; background-position: center;">
+  <main>
+    <header>
+      <h1>Application Payment</h1>
+      <p>Pay the application fee to complete your submission.</p>
+    </header>
+
+    <form id="paymentForm" action="#" method="post" novalidate>
+      <div class="field">
+        <label for="amount">Amount (USD)</label>
+        <input id="amount" name="amount" type="number" value="20" step="0.01" required>
+      </div>
+
+      <div class="field">
+        <label for="cardName">Cardholder name</label>
+        <input id="cardName" name="cardName" type="text" required>
+      </div>
+
+      <div class="field">
+        <label for="cardNumber">Card number</label>
+        <input id="cardNumber" name="cardNumber" type="text" inputmode="numeric" required>
+      </div>
+
+      <div class="field-row">
+        <div class="field small">
+          <label for="expiry">Expiry (MM/YY)</label>
+          <input id="expiry" name="expiry" type="text" placeholder="MM/YY" required>
+        </div>
+        <div class="field small">
+          <label for="cvc">CVC</label>
+          <input id="cvc" name="cvc" type="text" inputmode="numeric" required>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit">Pay</button>
+        <button type="button" id="backToApply">Back to application</button>
+      </div>
+
+      <div id="result" role="status" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script>
+    (function(){
+      const form = document.getElementById('paymentForm');
+      const res = document.getElementById('result');
+      document.getElementById('backToApply').addEventListener('click', ()=>{
+        window.location.href = 'apply.html';
+      });
+
+      function isJavaBridgeAvailable(){
+        return typeof window.javaBridge !== 'undefined' && window.javaBridge !== null;
+      }
+
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        res.textContent = '';
+        if(!form.checkValidity()){
+          res.textContent = 'Please fill all required fields';
+          return;
+        }
+        const amount = parseFloat(document.getElementById('amount').value) || 0;
+        const ref = 'PAY' + Date.now();
+
+        if(isJavaBridgeAvailable()){
+          try{
+            const paymentId = window.javaBridge.createPayment(amount, ref, true);
+            if(paymentId > 0){
+              res.textContent = 'Payment recorded. Reference: ' + ref + ' ID: ' + paymentId;
+              // navigate back to application to allow linking
+              setTimeout(()=>{ window.location.href = 'apply.html'; }, 1200);
+            } else {
+              res.textContent = 'Failed to create payment (bridge returned error).';
+            }
+          } catch(err){
+            res.textContent = 'Error when contacting Java bridge: ' + err;
+          }
+        } else {
+          // mock success in browser
+          res.textContent = 'Payment simulated. Reference: ' + ref + ' Amount: ' + amount.toFixed(2);
+          setTimeout(()=>{ window.location.href = 'apply.html'; }, 1200);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

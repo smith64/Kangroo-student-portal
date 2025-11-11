@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Apply - Kangaroo University</title>
+  <link rel="stylesheet" href="apply.css">
+</head>
+<body>
+  <main lang="en">
+    <header>
+      <h1>Kangaroo University — Application Form</h1>
+      <p>Please fill in the form below to apply for your chosen program.</p>
+    </header>
+
+    <form id="applicationForm" action="#" method="post" enctype="multipart/form-data" novalidate>
+      <div class="field">
+        <label for="fullName">Full name</label>
+        <input id="fullName" name="fullName" type="text" required aria-required="true">
+      </div>
+
+      <div class="field">
+        <label for="nrc">NRC number</label>
+        <input id="nrc" name="nrc" type="text" required>
+      </div>
+
+      <div class="field">
+        <label for="program">Program of choice</label>
+        <select id="program" name="program" required>
+          <option value="">-- Select a program --</option>
+          <option value="it">Bachelor's Degree in Information Technology</option>
+          <option value="software">Bachelor's Degree in Software</option>
+          <option value="cyber">Bachelor's Degree in Cyber Security</option>
+        </select>
+      </div>
+
+      <div class="field file">
+        <label for="grade12">Grade 12 result (PDF or image)</label>
+        <input id="grade12" name="grade12" type="file" accept="application/pdf,image/*">
+      </div>
+
+      <div class="field file">
+        <label for="nrcScan">NRC scan (PDF or image)</label>
+        <input id="nrcScan" name="nrcScan" type="file" accept="application/pdf,image/*">
+      </div>
+
+      <div class="actions">
+        <button type="button" id="goToPayment">Make payment</button>
+        <button type="submit">Submit application</button>
+      </div>
+
+      <div id="message" role="status" aria-live="polite"></div>
+    </form>
+
+  </main>
+
+  <script>
+    (function(){
+      const form = document.getElementById('applicationForm');
+      const msg = document.getElementById('message');
+      document.getElementById('goToPayment').addEventListener('click', ()=>{
+        window.location.href = 'payment.html';
+      });
+
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        msg.textContent = '';
+        if(!form.checkValidity()){
+          msg.textContent = 'Please fill all required fields.';
+          return;
+        }
+        // Collect data (in a real app you'd send to backend)
+        const data = new FormData(form);
+        const out = {
+          fullName: data.get('fullName'),
+          nrc: data.get('nrc'),
+          program: data.get('program'),
+          grade12: data.get('grade12') ? data.get('grade12').name : '',
+          nrcScan: data.get('nrcScan') ? data.get('nrcScan').name : ''
+        };
+        msg.textContent = 'Application ready to be submitted (demo): ' + JSON.stringify(out);
+      });
+    })();
+  </script>
+</body>
+</html>

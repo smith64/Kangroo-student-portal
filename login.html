@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    /* Palette: adjust --page-bg to tweak the page color to match layout */
+    :root {
+      --page-bg: #f0f4f8; /* neutral light blue-gray that matches white card */
+      --card-bg: #ffffff;
+      --primary: #0366d6;
+      --err: #b00020;
+    }
+
+    /* Ensure no background image is used and apply solid color */
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--page-bg);
+      background-image: none !important;
+      background-repeat: no-repeat;
+      background-size: cover;
+      color: #111827;
+    }
+
+    .card{
+      width: 320px;
+      background: var(--card-bg);
+      padding: 20px;
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="signin">
+    <h2 id="signin">Sign in</h2>
+    <form id="loginForm" autocomplete="off">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required />
+      </div>
+      <button id="submitBtn" type="submit">Login</button>
+      <div id="error" class="error">Please enter email and password</div>
+    </form>
+  </div>
+
+  <script>
+    (function () {
+      var form = document.getElementById('loginForm');
+      var err = document.getElementById('error');
+      var submitBtn = document.getElementById('submitBtn');
+
+      // If already authenticated, redirect to requested page or index
+      try {
+        if (localStorage.getItem('auth_token')) {
+          var alreadyTo = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+          window.location.replace(alreadyTo);
+        }
+      } catch(e){ /* ignore storage errors */ }
+
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        err.style.display = 'none';
+        submitBtn.disabled = true;
+
+        var email = form.email.value.trim();
+        var password = form.password.value;
+
+        if (!email || !password) {
+          err.textContent = 'Please enter email and password';
+          err.style.display = 'block';
+          submitBtn.disabled = false;
+          return;
+        }
+
+        // Send credentials to server API
+        fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, password: password })
+        }).then(function (res) {
+          if (!res.ok) {
+            if (res.status === 401) {
+              throw new Error('Invalid email or password');
+            }
+            throw new Error('Server error: ' + res.status);
+          }
+          return res.json();
+        }).then(function (payload) {
+          if (payload && payload.success) {
+            // store minimal token (demo only). In production, use secure cookie/JWT from server.
+            try {
+              localStorage.setItem('auth_token', JSON.stringify({ email: payload.email || email, ts: Date.now() }));
+            } catch (e) { /* ignore storage error */ }
+
+            var redirect = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+            window.location.href = redirect;
+          } else {
+            throw new Error(payload && payload.message ? payload.message : 'Login failed');
+          }
+        }).catch(function (errObj) {
+          err.textContent = errObj.message || 'Login failed';
+          err.style.display = 'block';
+        }).finally(function () {
+          submitBtn.disabled = false;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

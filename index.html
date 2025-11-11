@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Index</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <script>
+    // Auth gate: if no auth_token, redirect to login.html and include current path as redirect.
+    (function () {
+      try {
+        var token = localStorage.getItem('auth_token');
+        if (!token) {
+          var redirect = encodeURIComponent(window.location.pathname + window.location.search);
+          window.location.replace('login.html?redirect=' + redirect);
+        }
+      } catch (e) {
+        window.location.replace('login.html');
+      }
+    })();
+  </script>
+
+  <style>
+    /* Use same neutral page background as login page */
+    :root { --page-bg: #f0f4f8; }
+    body {
+      background-color: var(--page-bg);
+      background-image: none !important;
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #logoutBtn { position:fixed; top:12px; right:12px; padding:8px 12px; border:0; border-radius:6px; background:#d9534f; color:#fff; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <!-- logout control -->
+  <button id="logoutBtn" aria-label="Logout">Logout</button>
+
+  <script>
+    // Logout: clear token and send user to login page (preserve return target if desired)
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      try { localStorage.removeItem('auth_token'); } catch (e) { /* ignore */ }
+      var redirect = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = 'login.html?redirect=' + redirect;
+    });
+  </script>
+</body>
+</html>

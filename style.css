@@ -1,0 +1,207 @@
+/* CSS */
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #f5f7fb;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+header {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* overlay so text is readable even if HTML sets an image inline */
+  background-color: rgba(0,0,0,0.35);
+  background-blend-mode: overlay;
+}
+
+header h1 {
+  margin: 0;
+  padding: 1rem;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+/* Page layout */
+main {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Card container */
+section[aria-labelledby] {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  padding: 1.75rem;
+}
+
+/* Headings */
+h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  color: #0f172a;
+}
+
+/* Form */
+.form-group { margin-bottom: 1rem; }
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #0f172a;
+  font-size: 0.95rem;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #e6eef8;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #0f172a;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+input::placeholder {
+  color: #9ca3af;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+}
+
+/* Toggle button next to password */
+div[style*="display:flex"] { gap: .5rem; align-items: center; }
+
+#togglePwd {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #e6eef8;
+  background: #f8fafc;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+#togglePwd:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+  border-color: #3b82f6;
+}
+
+/* Small helper text */
+small {
+  display: block;
+  margin-top: 0.25rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Errors and messages */
+.error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.form-message {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  display: none;
+}
+
+.form-message[aria-live] { /* will show when text is added */
+  display: block;
+  background: #ecfdf5;
+  color: #064e3b;
+  border: 1px solid #bbf7d0;
+}
+
+/* Actions */
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.form-actions button[type="submit"] {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.form-actions button[type="submit"]:hover {
+  background: #1e40af;
+}
+
+.form-actions a.button-link {
+  display: inline-block;
+  text-decoration: none;
+  color: #374151;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+
+.form-actions a.button-link:hover {
+  text-decoration: underline;
+}
+
+/* Checkbox alignment */
+.form-group input[type="checkbox"] {
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Accessibility focus */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  header { height: 120px; padding: 0.5rem; }
+  section[aria-labelledby] { margin: 1rem; padding: 1rem; }
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .form-actions a.button-link { width: 100%; text-align: center; }
+}
+
